@@ -11,6 +11,9 @@ provider:
     - Effect: Allow
       Action: dynamodb:scan
       Resource: arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/restaurants
+    - Effect: Allow
+      Action: execute-api:Invoke
+      Resource: arn:aws:execute-api:#{AWS::Region}:#{AWS::AccountId}:*/*/GET/restaurants
 
 
 functions:
@@ -22,12 +25,26 @@ functions:
           method: get
     environment:
       restaurantsAPI: https://aweiml8di8.execute-api.us-east-1.amazonaws.com/dev/restaurants
+      cognito_user_pool_id: us-east-1_33pQqm23e
+      cognito_client_id: k364v5vi7uoqpj52t2m2ob9up
   get-restaurants:
     handler: functions/get-restaurants.handler
     events:
       - http:
           path: /restaurants
           method: get
+          authorizer: aws_iam
+    environment:
+      restaurantsTable: restaurants
+  
+  search-restaurants:
+    handler: functions/search-restaurants.handler
+    events:
+      - http:
+          path: /restaurants/search
+          method: post
+          authorizer:
+            arn: arn:aws:cognito-idp:us-east-1:427770321552:userpool/us-east-1_33pQqm23e
     environment:
       restaurantsTable: restaurants
 

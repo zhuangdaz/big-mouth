@@ -9,6 +9,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "aws4": "^1.10.1",
         "bluebird": "^3.7.2",
         "co": "^4.6.0",
         "mustache": "^4.0.1",
